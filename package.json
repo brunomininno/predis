@@ -1,0 +1,44 @@
+{
+	"name": "eternity",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"start": "DEBUG=eternity:* node ./bin/www",
+		"local": "NODE_ENV=local DEBUG=eternity:* nodemon ./bin/www",
+		"production": "NODE_ENV=production DEBUG=eternity:* nodemon ./bin/www",
+		"staging": "NODE_ENV=staging DEBUG=eternity:* node ./bin/www",
+		"uat": "NODE_ENV=uat DEBUG=eternity:* node ./bin/www",
+		"docs": "apidoc -e node_modules -o api-docs"
+	},
+	"dependencies": {
+		"app-module-path": "^2.1.0",
+		"async": "^2.3.0",
+		"aws-sdk": "^2.65.0",
+		"bcrypt": "^1.0.3",
+		"bluebird": "^3.4.7",
+		"body-parser": "~1.15.1",
+		"cookie-parser": "~1.4.3",
+		"crypto": "^1.0.1",
+		"debug": "~2.2.0",
+		"express": "~4.13.4",
+		"fcm-push": "^1.1.3",
+		"jwt-simple": "^0.5.1",
+		"konphyg": "^1.4.0",
+		"moment": "^2.18.1",
+		"multer": "^1.3.0",
+		"mysql2": "^1.5.2",
+		"newrelic": "^1.40.0",
+		"nodemon": "^1.11.0",
+		"request": "^2.81.0",
+		"request-promise": "^4.2.0",
+		"sendgrid": "^5.2.3",
+		"sequelize": "git://github.com/brunomininno/sequelize.git",
+		"underscore": "^1.8.3",
+		"winston": "^2.3.1"
+	},
+	"standard": {
+		"globals": [
+			"__config"
+		]
+	}
+}
