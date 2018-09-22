@@ -1,3 +1,3 @@
 {
-	"db": "mysql://root:banana123@rds-stg.c9ajxxbvtfcj.us-east-1.rds.amazonaws.com:3306/eternity"
+	"db": "mysql://admin:fe8bfbfd6e47feca77891cc4def62e526335c7017ea9c77d@127.0.0.1:3306/predis"
 }
