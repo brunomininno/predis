@@ -37,7 +37,7 @@ exports.getOneById = async (req, res, next) => {
 		return responder.respondBadRequest(res, messages.ID_product_REQUIRED)
 	}
 
-	let scopes = ['defaultScope', 'image']
+	let scopes = ['metadata', 'image']
 
 	let product = await models.product.scope(scopes).findById(id)
 	if (!product) {

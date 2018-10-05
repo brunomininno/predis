@@ -29,11 +29,11 @@ module.exports = (sequelize, DataTypes) => {
 	
 	entity.associate = (models) => {
 		entity.hasMany(models.metadata, { foreignKey: { field: 'post_id' }, as: 'metadata' })
-		// entity.hasOne(models.product, { foreignKey: { field: 'post_parent' }, as: 'image' })
+		entity.hasOne(models.product, { targetKey: 'post_parent', foreignKey: 'post_parent', as: 'image' })
 	}
 	
 	entity.loadScopes = (models) => {
-		entity.addScope('defaultScope', {
+		entity.addScope('metadata', {
 			where: {
 				type: 'product'
 			},
@@ -44,19 +44,19 @@ module.exports = (sequelize, DataTypes) => {
 					as: 'metadata'
 				}
 			]
-		}, { override: true })
+		})
 		
 		entity.addScope('image', {
-			// include: [
-			// 	{
-			// 		model: models.product,
-			// 		required: false,
-			// 		as: 'image',
-			// 		where: {
-			// 			type: 'attachment'
-			// 		}
-			// 	}
-			// ]
+			include: [
+				{
+					model: models.product,
+					required: false,
+					as: 'image',
+					where: {
+						type: 'attachment'
+					}
+				}
+			]
 		})
 	}
 	
