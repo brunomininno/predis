@@ -16,7 +16,7 @@ exports.findAll = async(options, callback) => {
 		query.offset = undefined
 	}
 
-	let scopes = ['defaultScope']
+	let scopes = ['defaultScope', 'image']
 
 	if (options.filters) {
 		let filters = JSON.parse(options.filters)

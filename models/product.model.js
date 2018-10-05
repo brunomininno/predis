@@ -5,27 +5,33 @@ const _ = require('underscore')
 
 module.exports = (sequelize, DataTypes) => {
 	let entity = sequelize.define('product',
-		{
-			type: {
-				type: DataTypes.STRING,
-				field: 'post_type'
-			},
-
-			name: {
-				type: DataTypes.STRING,
-				field: 'post_title'
-			}
-
+	{
+		type: {
+			type: DataTypes.STRING,
+			field: 'post_type'
 		},
-		{
-			tableName: 'wp_posts'
-		}
-	)
 
+		description: {
+			type: DataTypes.STRING,
+			field: 'post_content'
+		},
+		
+		name: {
+			type: DataTypes.STRING,
+			field: 'post_title'
+		}
+		
+	},
+	{
+		tableName: 'wp_posts'
+	}
+	)
+	
 	entity.associate = (models) => {
 		entity.hasMany(models.metadata, { foreignKey: { field: 'post_id' }, as: 'metadata' })
+		// entity.hasOne(models.product, { foreignKey: { field: 'post_parent' }, as: 'image' })
 	}
-
+	
 	entity.loadScopes = (models) => {
 		entity.addScope('defaultScope', {
 			where: {
@@ -39,10 +45,23 @@ module.exports = (sequelize, DataTypes) => {
 				}
 			]
 		}, { override: true })
+		
+		entity.addScope('image', {
+			// include: [
+			// 	{
+			// 		model: models.product,
+			// 		required: false,
+			// 		as: 'image',
+			// 		where: {
+			// 			type: 'attachment'
+			// 		}
+			// 	}
+			// ]
+		})
 	}
-
+	
 	entity.loadHooks = (models) => {
 	}
-
+	
 	return entity
 }
