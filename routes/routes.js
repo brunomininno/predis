@@ -7,6 +7,7 @@ const index = require('routes/index')
 
 // Require routes
 const userRoutes = require('routes/v1/user.routes')
+const productRoutes = require('routes/v1/product.routes')
 
 module.exports = function (app) {
 
@@ -15,6 +16,7 @@ module.exports = function (app) {
 
 	// User routes
 	app.use('/v1/users', userRoutes)
+	app.use('/v1/products', productRoutes)
 
 	app.use(responder.notFound)
 	app.use(responder.error)

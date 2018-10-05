@@ -10,9 +10,8 @@ let db = {}
 
 let sequelize = new Sequelize(__config.db, {
 	define: {
-		timestamps: true,
 		freezeTableName: true,
-		underscored: true
+		timestamps: false
 	},
 	omitNull: false,
 	logging: false
@@ -40,12 +39,6 @@ Object.keys(db).forEach(modelName => {
 
 // Load scopes & hooks
 Object.keys(db).forEach(modelName => {
-	db[modelName].addScope('defaultScope', {
-		where: {
-			isDeleted: false
-		}
-	}, { override: true })
-
 	if (db[modelName].loadScopes) {
 		db[modelName].loadScopes(db)
 	}
