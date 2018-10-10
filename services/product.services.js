@@ -24,7 +24,7 @@ exports.findAll = async(options, callback) => {
 		if (filters.search && filters.typeahead) {
 			let search = filters.search
 			query.where = {
-				name: { $like: search + '%' }
+				name: { $like: '%' + search + '%' }
 			}
 			scopes = ['image']
 		} else if (filters.search) {
