@@ -26,7 +26,7 @@ exports.findAll = async(options, callback) => {
 			query.where = {
 				name: { $like: search + '%' }
 			}
-			scopes = []
+			scopes = ['image']
 		} else if (filters.search) {
 			let search = filters.search
 			let sqlQuery = 'SELECT DISTINCT(p.id) AS id FROM wp_posts AS p ' +
