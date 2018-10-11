@@ -4,10 +4,9 @@ const authHelper = require('helpers/auth.helper')
 const moment = require('moment')
 const models = require('models')
 const responder = require('helpers/response.helper')
-const applicantAcl = {}
 const messages = require('catalogs/messages')
 
-exports.validateAccess = (controller, action) => {
+exports.validateAccess = () => {
 	return async (req, res, next) => {
 		let headers = req.headers
 

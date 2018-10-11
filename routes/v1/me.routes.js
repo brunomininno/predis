@@ -6,8 +6,8 @@ const asyncMiddleware = require('middleware/async.middleware')
 const controller = require('controllers/me.controller')
 
 
-router.get('/favorites', asyncMiddleware(controller.getFavorites))
-router.put('/favorites/:productId', asyncMiddleware(controller.addFavorite))
-router.delete('/favorites/:productId', asyncMiddleware(controller.removeFavorite))
+router.get('/favorites', authenticator.validateAccess(), asyncMiddleware(controller.getFavorites))
+router.put('/favorites/:productId', authenticator.validateAccess(), asyncMiddleware(controller.addFavorite))
+router.delete('/favorites/:productId', authenticator.validateAccess(), asyncMiddleware(controller.removeFavorite))
 
 module.exports = router
