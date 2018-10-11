@@ -17,7 +17,7 @@ let sequelize = new Sequelize(__config.db, {
 	logging: false
 })
 
-// sequelize.sync({ alter: true })
+sequelize.sync()
 
 fs.readdirSync(__dirname)
 	.filter(file => {

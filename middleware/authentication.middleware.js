@@ -9,23 +9,23 @@ const messages = require('catalogs/messages')
 
 exports.validateAccess = (controller, action) => {
 	return async (req, res, next) => {
-		// let headers = req.headers
+		let headers = req.headers
 
-		// if (!isTokenValid(headers)) {
-		// 	return responder.respondUnauthorized(res, messages.INVALID_TOKEN)
-		// }
+		if (!isTokenValid(headers)) {
+			return responder.respondUnauthorized(res, messages.INVALID_TOKEN)
+		}
 
-		// let payload = authHelper.decodeToken(headers['x-api-key'])
+		let payload = authHelper.decodeToken(headers['x-api-key'])
 
-		// let user = await models.user.findById(payload.data.id)
+		let user = await models.user.findById(payload.data.id)
 
-		// if (!user) {
-		// 	__logger.error('validateAccess: Error getting user for ID ' + payload.data.id)
-		// 	return responder.respondBadRequest(res, 'Se produjo un error al validar el usuario')
-		// }
+		if (!user) {
+			__logger.error('validateAccess: Error getting user for ID ' + payload.data.id)
+			return responder.respondBadRequest(res, 'Se produjo un error al validar el usuario')
+		}
 
-		// user = user.get({ plain: true })
-		// req.user = user
+		user = user.get({ plain: true })
+		req.user = user
 		return next()
 	}
 }

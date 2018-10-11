@@ -6,6 +6,8 @@ const _ = require('underscore')
 module.exports = (sequelize, DataTypes) => {
 	let entity = sequelize.define('product',
 	{
+		...baseModel,
+		
 		type: {
 			type: DataTypes.STRING,
 			field: 'post_type'

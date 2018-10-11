@@ -3,8 +3,9 @@ let Sequelize = require('sequelize')
 
 module.exports = {
 	id: {
-		type: Sequelize.INTEGER,
+		type: Sequelize.BIGINT(20).UNSIGNED,
 		autoIncrement: true,
-		primaryKey: true
+		primaryKey: true,
+		field: 'ID'
 	}
 }
