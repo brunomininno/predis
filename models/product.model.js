@@ -56,7 +56,17 @@ module.exports = (sequelize, DataTypes) => {
 					as: 'image',
 					where: {
 						type: 'attachment'
-					}
+					},
+					include: [
+						{
+							model: models.metadata,
+							required: false,
+							as: 'metadata',
+							where: {
+								'meta_key': '_wp_attached_file'
+							}
+						}
+					]
 				}
 			]
 		})
