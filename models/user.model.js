@@ -7,7 +7,18 @@ let Sequelize = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
 	let entity = sequelize.define('user',
 		{
-			...baseModel
+			...baseModel,
+
+			email: {
+				type: DataTypes.STRING,
+				field: 'user_email'
+			},
+
+			createdAt: {
+				type: DataTypes.DATE,
+				field: 'user_registered',
+				defaultValue: Sequelize.NOW
+			},
 		},
 		{
 			tableName: 'wp_users'
@@ -15,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
 	)
 
 	entity.associate = (models) => {
+		entity.hasMany(models.userMetadata, { foreignKey: { field: 'user_id' }, as: 'metadata' })
 		entity.belongsToMany(models.product, { through: 'user_product', foreignKey: { field: 'id_user', name: 'idUser', type: Sequelize.BIGINT(20).UNSIGNED }, otherKey: { field: 'id_product', name: 'idProduct', type: Sequelize.BIGINT(20).UNSIGNED }, as: 'favorites' })
+		entity.hasOne(models.userSocialData, { foreignKey: { field: 'id_user', name: 'idUser', type: Sequelize.BIGINT(20).UNSIGNED }, as: 'userSocialData' })
 	}
 
 	entity.loadScopes = (models) => {
@@ -25,6 +38,25 @@ module.exports = (sequelize, DataTypes) => {
 					model: models.product.scope(['metadata', 'image']),
 					required: false,
 					as: 'favorites'
+				}
+			]
+		})
+
+		entity.addScope('userSocialData', {
+			include: [
+				{
+					model: models.userSocialData,
+					as: 'userSocialData'
+				}
+			]
+		})
+
+		entity.addScope('metadata', {
+			include: [
+				{
+					model: models.userMetadata,
+					required: false,
+					as: 'metadata'
 				}
 			]
 		})
