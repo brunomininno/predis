@@ -52,6 +52,53 @@ exports.fbLogin = async(req, res, next) => {
 	})
 }
 
+exports.getMe = async (req, res, next) => {
+	let userId = req.user.id
+	let user = await models.user.scope(['metadata']).findById(userId)
+
+	if (!user) {
+		return responder.respondBadRequest(res, 'Algo anduvo mal')
+	}
+
+	responder.respondData(res, user)
+}
+
+exports.updateMe = async(req, res, next) => {
+	let userId = req.user.id
+	let user = await models.user.scope(['metadata']).findById(userId)
+
+	if (!user) {
+		return responder.respondBadRequest(res, 'Algo anduvo mal')
+	}
+
+	let body = req.body
+
+	if (body.email) {
+		await user.set('email', body.email)
+		await user.save()
+	}
+
+	if (body.firstName) {
+		let firstName = await models.userMetadata.findOne({ where: { user_id: userId, key: 'first_name' }})
+		if (firstName) {
+			await firstName.set('value', body.firstName)
+			await firstName.save()
+		}
+	}
+
+	if (body.lastName) {
+		let lastName = await models.userMetadata.findOne({ where: { user_id: userId, key: 'last_name' } })
+		if (lastName) {
+			await lastName.set('value', body.lastName)
+			await lastName.save()
+		}
+	}
+
+	user = await models.user.scope(['metadata']).findById(userId)
+
+	responder.respondData(res, user)
+}
+
 exports.getFavorites = async (req, res, next) => {
 	let userId = req.user.id
 	let user = await models.user.scope(['favorites']).findById(userId)

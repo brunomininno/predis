@@ -8,12 +8,12 @@ exports.createUser = async(userData, socialNetwork) => {
 		userSocialData: {},
 		metadata: [
 			{
-				key: userData.first_name,
-				value: 'first_name'
+				key: 'first_name',
+				value: userData.first_name,
 			},
 			{
-				key: userData.last_name,
-				value: 'last_name'
+				key: 'last_name',
+				value: userData.last_name,
 			},
 			{
 				key: 'wp_capabilities',
