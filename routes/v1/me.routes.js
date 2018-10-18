@@ -6,7 +6,7 @@ const asyncMiddleware = require('middleware/async.middleware')
 const controller = require('controllers/me.controller')
 
 
-router.post('/fb-login', asyncMiddleware(controller.fbLogin))
+router.post('/login', asyncMiddleware(controller.login))
 
 
 router.get('/', authenticator.validateAccess(), asyncMiddleware(controller.getMe))

@@ -13,6 +13,17 @@ const fb = new Facebook({
 	version: 'v3.1'
 })
 
+exports.login = async(req, res, next) => {
+	let fbToken = req.body.fbToken
+	let googleToken = req.body.googleToken
+
+	if (fbToken) {
+		exports.fbLogin(req, res, next)
+	} else if (googleToken) {
+		// exports.googleLogin(req, res, next)
+	}
+}
+
 exports.fbLogin = async(req, res, next) => {
 	let fbToken = req.body.fbToken
 
