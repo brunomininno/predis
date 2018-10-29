@@ -18,6 +18,10 @@ exports.createUser = async(userData, socialNetwork) => {
 			{
 				key: 'wp_capabilities',
 				value: 'a:1:{s:8:"customer";b:1;}'
+			},
+			{
+				key: 'profile_pic',
+				value: userData.picture
 			}
 		]
 	}

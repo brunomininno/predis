@@ -8,7 +8,8 @@ exports.findAll = async(options, callback) => {
 		limit: options.limit,
 		offset: options.limit * (options.page - 1),
 		distinct: true,
-		col: 'product.id'
+		col: 'product.id',
+		logging: true
 	}
 
 	if (options.limit && options.limit == -1) {

@@ -45,7 +45,7 @@ const messages = require('catalogs/messages')
 */
 
 const respond = (res, response) => {
-	__logger.info(JSON.stringify(response))
+	// __logger.info(JSON.stringify(response))
 	res.send(response)
 }
 

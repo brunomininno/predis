@@ -2,9 +2,7 @@
 
 const responder = require('helpers/response.helper')
 const userServices = require('services/user.services')
-const messages = require('catalogs/messages')
 const models = require('models')
-const moment = require('moment')
 const authHelper = require('helpers/auth.helper')
 const Facebook = require('fb').Facebook
 const fb = new Facebook({
@@ -13,6 +11,10 @@ const fb = new Facebook({
 	version: 'v3.1'
 })
 
+const { google } = require('googleapis')
+const OAuth2 = google.auth.OAuth2
+const oauth2Client = new OAuth2()
+
 exports.login = async(req, res, next) => {
 	let fbToken = req.body.fbToken
 	let googleToken = req.body.googleToken
@@ -20,8 +22,59 @@ exports.login = async(req, res, next) => {
 	if (fbToken) {
 		exports.fbLogin(req, res, next)
 	} else if (googleToken) {
-		// exports.googleLogin(req, res, next)
+		exports.googleLogin(req, res, next)
 	}
+}
+
+exports.googleLogin = async (req, res, next) => {
+	let googleToken = req.body.googleToken
+
+	if (!googleToken) {
+		return responder.respondBadRequest(res, 'Invalid google token')
+	}
+
+	oauth2Client.setCredentials({ access_token: googleToken });
+	const oauth2 = google.oauth2({
+		auth: oauth2Client,
+		version: 'v2'
+	})
+
+	oauth2.userinfo.get(async(err, response) => {
+		if (err || !response.data) {
+			if (err) {
+				return responder.respondBadRequest(res, err.errors[0])
+			} else {
+				return responder.respondBadRequest(res, 'Invalid google token')
+			}
+		}
+
+		// Revisar si existe en la DB, sino lo creo
+		let userSocialData = await models.userSocialData.scope(['user']).findOne({ where: { googleId: response.data.id } })
+
+		let user = null
+		if (!userSocialData) {
+
+			let userData = {
+				first_name: response.data.given_name,
+				last_name: response.data.family_name,
+				picture: response.data.picture,
+				email: response.data.email,
+				id: response.data.id
+			}
+			user = await userServices.createUser(userData, 'google')
+		} else {
+			user = userSocialData.user
+		}
+
+		user = await models.user.scope(['metadata']).findById(user.id)
+
+		let token = authHelper.generateToken(user.toJSON())
+
+		responder.respondData(res, {
+			'token': token,
+			'user': user
+		})
+	})
 }
 
 exports.fbLogin = async(req, res, next) => {
@@ -33,7 +86,7 @@ exports.fbLogin = async(req, res, next) => {
 
 	fb.setAccessToken(fbToken)
 
-	fb.api('/me?fields=id,first_name,last_name,email', async(response) => {
+	fb.api('/me?fields=id,first_name,last_name,email,picture{url}', async(response) => {
 		if (!response || response.error) {
 			if (response.error) {
 				return responder.respondBadRequest(res, response.error.message)
@@ -47,6 +100,7 @@ exports.fbLogin = async(req, res, next) => {
 
 		let user = null
 		if (!userSocialData) {
+			response.picture = response.picture.data.url
 			user = await userServices.createUser(response, 'fb')
 		} else {
 			user = userSocialData.user
