@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 	entity.associate = (models) => {
 		entity.hasMany(models.metadata, { foreignKey: { field: 'post_id' }, as: 'metadata' })
 		entity.hasOne(models.product, { targetKey: 'post_parent', foreignKey: 'post_parent', as: 'image' })
+		entity.belongsTo(models.user, { foreignKey: 'post_author', as: 'provider' })
 	}
 	
 	entity.loadScopes = (models) => {
@@ -44,6 +45,41 @@ module.exports = (sequelize, DataTypes) => {
 					model: models.metadata,
 					required: false,
 					as: 'metadata'
+				}
+			]
+		})
+
+		entity.addScope('provider', {
+			include: [
+				{
+					model: models.user,
+					required: false,
+					as: 'provider',
+					include: [
+						{
+							model: models.userMetadata,
+							required: false,
+							as: 'metadata'
+						},
+						{
+							model: models.userMetadata,
+							required: false,
+							as: 'profileImage',
+							where: {
+								key: 'wp_metronet_image_id'
+							},
+							include: [
+								{
+									model: models.metadata,
+									required: false,
+									as: 'metadata',
+									where: {
+										key: '_wp_attached_file'
+									}
+								}
+							]
+						}
+					]
 				}
 			]
 		})

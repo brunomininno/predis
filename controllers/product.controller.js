@@ -34,10 +34,10 @@ exports.getOneById = async (req, res, next) => {
 	let id = req.params.id
 
 	if (!id) {
-		return responder.respondBadRequest(res, messages.ID_product_REQUIRED)
+		return responder.respondBadRequest(res, 'ID Requerido')
 	}
 
-	let scopes = ['metadata', 'image']
+	let scopes = ['metadata', 'image', 'provider']
 
 	let product = await models.product.scope(scopes).findById(id)
 	if (!product) {
