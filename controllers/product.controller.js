@@ -85,6 +85,9 @@ exports.getOneById = async (req, res, next) => {
 let stockOrNot = async (product, startScrapes) => {
 	let scrapeId = null
 	let startScrape = null
+	if (!product.metadata) {
+		return false
+	}
 	for (let md of product.metadata) {
 		if (md.key == '_scrape_task_id') {
 			scrapeId = md.value
