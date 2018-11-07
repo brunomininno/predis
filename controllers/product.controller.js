@@ -74,7 +74,7 @@ exports.getOneById = async (req, res, next) => {
 		}
 	}
 
-	product.isInStock = await stockOrNot(r, startScrapes)
+	product.isInStock = await stockOrNot(product, startScrapes)
 
 	__logger.info('productController->getOneById: Found product ' + id)
 
