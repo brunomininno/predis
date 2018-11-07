@@ -15,13 +15,14 @@ exports.getAll = async (req, res, next) => {
 		filters: req.query.filters || null
 	}
 
+	let startScrapes = await productServices.getStartScrapes()
+	let profileImages = await userServices.getProfileImage()
+
 	productServices.findAll(options, async(err, data) => {
 		if (err) {
 			__logger.error('getAll: Error getting products', err)
 			return next(messages.GET_DATA_FAILED)
 		}
-
-		let profileImages = await userServices.getProfileImage()
 
 		let i = 0
 		for (let r of data.rows) {
@@ -31,6 +32,7 @@ exports.getAll = async (req, res, next) => {
 					r.provider.profileImage = pi.meta_value
 				}
 			}
+			r.isInStock = await stockOrNot(r, startScrapes)
 			data.rows[i] = r
 			i++
 		}
@@ -54,6 +56,7 @@ exports.getOneById = async (req, res, next) => {
 	}
 
 	let scopes = ['metadata', 'image', 'provider']
+	let startScrapes = await productServices.getStartScrapes()
 
 	let product = await models.product.scope(scopes).findById(id)
 	if (!product) {
@@ -71,9 +74,36 @@ exports.getOneById = async (req, res, next) => {
 		}
 	}
 
+	product.isInStock = await stockOrNot(r, startScrapes)
+
 	__logger.info('productController->getOneById: Found product ' + id)
 
 	return responder.respondData(res, product)
 
 }
 
+let stockOrNot = async (product, startScrapes) => {
+	let scrapeId = null
+	let startScrape = null
+	for (let md of product.metadata) {
+		if (md.key == '_scrape_task_id') {
+			scrapeId = md.value
+		}
+	}
+
+	if (!scrapeId) {
+		return false
+	}
+
+	for (let ss of startScrapes) {
+		if (scrapeId == ss.ID) {
+			startScrape = ss.meta_value || null
+		}
+	}
+
+	if (!startScrape) {
+		return false
+	}
+
+	return moment(product.updatedAt).isBefore(moment(startScrape))
+}

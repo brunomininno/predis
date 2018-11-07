@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
 		name: {
 			type: DataTypes.STRING,
 			field: 'post_title'
+		},
+
+		updatedAt: {
+			type: DataTypes.DATE,
+			field: 'post_modified'
 		}
 		
 	},

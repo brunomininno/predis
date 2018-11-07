@@ -9,6 +9,9 @@ exports.findAll = async(options, callback) => {
 		offset: options.limit * (options.page - 1),
 		distinct: true,
 		col: 'product.id',
+		order: [
+			['updatedAt', 'DESC']
+		],
 		logging: true
 	}
 
@@ -61,4 +64,20 @@ exports.findAll = async(options, callback) => {
 			__logger.error('productServices->findAll: Error Retrieving products', err)
 			return callback(err, null)
 		})
+}
+
+exports.getStartScrapes = async () => {
+	let sqlQuery = "SELECT " +
+		"	p.ID, " +
+		"	pm.meta_value " +
+		"FROM " +
+		"	wp_posts p " +
+		"INNER JOIN wp_postmeta pm ON pm.post_id = p.ID " +
+		"	AND p.post_type = 'scrape' " +
+		"	AND pm.meta_key = 'scrape_start_time' " +
+		"ORDER BY " +
+		"	p.ID ASC"
+	let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
+
+	return Promise.resolve(result)
 }
