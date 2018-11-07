@@ -54,7 +54,7 @@ exports.findAll = async(options, callback) => {
 				id: ids
 			}
 
-			query.order.push([Sequelize.literal('FIELD(product.id, ' + ids.join() + ')')])
+			query.order.unshift([Sequelize.literal('FIELD(product.id, ' + ids.join() + ')')])
 		}
 	}
 
