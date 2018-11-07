@@ -41,7 +41,7 @@ exports.findAll = async(options, callback) => {
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				') ' +
 				'LIMIT ' + query.limit +
-				'OFFSET ' + query.offset
+				' OFFSET ' + query.offset
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
 			
