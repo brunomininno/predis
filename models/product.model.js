@@ -59,25 +59,10 @@ module.exports = (sequelize, DataTypes) => {
 						{
 							model: models.userMetadata,
 							required: false,
-							as: 'metadata'
-						},
-						{
-							model: models.userMetadata,
-							required: false,
-							as: 'profileImage',
+							as: 'metadata',
 							where: {
-								key: 'wp_metronet_image_id'
-							},
-							include: [
-								{
-									model: models.metadata,
-									required: false,
-									as: 'metadata',
-									where: {
-										key: '_wp_attached_file'
-									}
-								}
-							]
+								key: 'nickname'
+							}
 						}
 					]
 				}

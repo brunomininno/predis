@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
 
 	entity.associate = (models) => {
 		entity.hasMany(models.userMetadata, { foreignKey: { field: 'user_id' }, as: 'metadata' })
-		entity.hasOne(models.userMetadata, { foreignKey: { field: 'user_id' }, as: 'profileImage' })
 		entity.belongsToMany(models.product, { through: 'user_product', foreignKey: { field: 'id_user', name: 'idUser', type: Sequelize.BIGINT(20).UNSIGNED }, otherKey: { field: 'id_product', name: 'idProduct', type: Sequelize.BIGINT(20).UNSIGNED }, as: 'favorites' })
 		entity.hasOne(models.userSocialData, { foreignKey: { field: 'id_user', name: 'idUser', type: Sequelize.BIGINT(20).UNSIGNED }, as: 'userSocialData' })
 	}
@@ -58,14 +57,6 @@ module.exports = (sequelize, DataTypes) => {
 					model: models.userMetadata,
 					required: false,
 					as: 'metadata'
-				},
-				{
-					model: models.userMetadata,
-					required: false,
-					as: 'profileImage',
-					where: {
-						key: 'wp_metronet_image_id'
-					}
 				}
 			]
 		})

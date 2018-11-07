@@ -28,12 +28,5 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	)
 
-	entity.associate = (models) => {
-		entity.hasOne(models.metadata, { foreignKey: 'post_id', as: 'metadata' })
-		var item = entity.associations[models.metadata.name]
-		item.sourceIdentifier = item.sourceKey = item.sourceKeyAttribute = 'value'
-		item.sourceKeyIsPrimary = false
-	}
-
 	return entity
 }

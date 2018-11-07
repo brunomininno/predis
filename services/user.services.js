@@ -49,3 +49,22 @@ exports.createUser = async(userData, socialNetwork) => {
 	
 	return Promise.resolve(createdUser)
 }
+
+exports.getProfileImage = async(userId = null) => {
+	let sqlQuery = "SELECT " +
+		"	ph.meta_value, " +
+		"	um.user_id " +
+		"FROM " +
+		"	wp_usermeta um " +
+		"INNER JOIN wp_postmeta ph ON ph.post_id = um.meta_value " +
+		"	AND um.meta_key = 'wp_metronet_image_id' " +
+		"	AND ph.meta_key = '_wp_attached_file' "
+
+	if (userId) {
+		sqlQuery += "WHERE um.user_id = " + userId
+	}
+
+	let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
+
+	return Promise.resolve(result)
+}
