@@ -39,7 +39,9 @@ exports.findAll = async(options, callback) => {
 				'AND( ' +
 				'	(MATCH(p.post_title, p.post_content) AGAINST("' + search + '")) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
-				')'
+				') ' +
+				'LIMIT ' + query.limit +
+				'OFFSET ' + query.offset
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
 			
