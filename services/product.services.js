@@ -34,7 +34,7 @@ exports.findAll = async(options, callback) => {
 		} else if (filters.search) {
 			let search = filters.search
 			let sqlQuery = 'SELECT DISTINCT(p.id) AS id, ' +
-				'MATCH(p.post_title, p.post_content) AGAINST("' + search + '") AS match ' +
+				'MATCH(p.post_title, p.post_content) AGAINST("' + search + '") AS matchi ' +
 				'FROM wp_posts AS p ' +
 				'INNER JOIN wp_postmeta AS md ON md.post_id = p.ID ' +
 				'WHERE p.post_type = "product" ' +
@@ -42,7 +42,7 @@ exports.findAll = async(options, callback) => {
 				'	(MATCH(p.post_title, p.post_content) AGAINST("' + search + '")) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				') ' +
-				'ORDER BY match DESC'
+				'ORDER BY matchi DESC'
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
 			
