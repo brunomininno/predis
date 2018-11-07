@@ -37,8 +37,7 @@ exports.findAll = async(options, callback) => {
 				'INNER JOIN wp_postmeta AS md ON md.post_id = p.ID ' +
 				'WHERE p.post_type = "product" ' +
 				'AND( ' +
-				'	(p.post_title LIKE "%' + search + '%") OR ' +
-				'	(p.post_content LIKE "%' + search + '%") OR ' +
+				'	(MATCH(p.post_title, p.post_content) AGAINST("' + search + '")) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				')'
 
