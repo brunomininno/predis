@@ -45,12 +45,16 @@ exports.findAll = async(options, callback) => {
 				'ORDER BY matchi DESC'
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
+
+			let ids = result.map(v => {
+				return v.id
+			})
 			
 			query.where = {
-				id: result.map(v => {
-					return v.id
-				})
+				id: ids
 			}
+
+			query.order.push([Sequelize.literal('FIELD(product.id, ' + ids.join() + ')')])
 		}
 	}
 
