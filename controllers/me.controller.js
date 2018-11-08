@@ -159,6 +159,22 @@ exports.updateMe = async(req, res, next) => {
 		}
 	}
 
+	if (body.phone) {
+		let phone = await models.userMetadata.findOne({ where: { user_id: userId, key: 'phone' } })
+		if (phone) {
+			await phone.set('value', body.phone)
+			await phone.save()
+		} 
+	}
+
+	if (body.birthDate) {
+		let birthDate = await models.userMetadata.findOne({ where: { user_id: userId, key: 'birth_date' } })
+		if (birthDate) {
+			await birthDate.set('value', body.birthDate)
+			await birthDate.save()
+		}
+	}
+
 	user = await models.user.scope(['metadata']).findById(userId)
 
 	responder.respondData(res, user)

@@ -22,6 +22,14 @@ exports.createUser = async(userData, socialNetwork) => {
 			{
 				key: 'profile_pic',
 				value: userData.picture
+			},
+			{
+				key: 'phone',
+				value: ''
+			},
+			{
+				key: 'birth_date',
+				value: ''
 			}
 		]
 	}
