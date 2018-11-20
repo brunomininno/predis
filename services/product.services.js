@@ -33,13 +33,14 @@ exports.findAll = async(options, callback) => {
 			scopes = ['image']
 		} else if (filters.search) {
 			let search = filters.search
+			let searchWithAsteriscos = search.split(' ').join('* ') + '*'
 			let sqlQuery = 'SELECT DISTINCT(p.id) AS id, ' +
-				'MATCH(p.post_title, p.post_content) AGAINST("' + search + '") AS matchi ' +
+				'MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
 				'FROM wp_posts AS p ' +
 				'INNER JOIN wp_postmeta AS md ON md.post_id = p.ID ' +
 				'WHERE p.post_type = "product" ' +
 				'AND( ' +
-				'	(MATCH(p.post_title, p.post_content) AGAINST("' + search + '")) OR ' +
+				'	(MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE)) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				') ' +
 				'ORDER BY matchi DESC'
