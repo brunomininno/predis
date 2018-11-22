@@ -7,6 +7,7 @@ const authHelper = require('helpers/auth.helper')
 const messages = require('catalogs/messages')
 const models = require('models')
 const moment = require('moment')
+const striptags = require('striptags')
 
 exports.getAll = async (req, res, next) => {
 	let options = {
@@ -15,7 +16,6 @@ exports.getAll = async (req, res, next) => {
 		filters: req.query.filters || null
 	}
 
-	let startScrapes = await productServices.getStartScrapes()
 	let profileImages = await userServices.getProfileImage()
 
 	productServices.findAll(options, async(err, data) => {
@@ -32,7 +32,7 @@ exports.getAll = async (req, res, next) => {
 					r.provider.profileImage = pi.meta_value
 				}
 			}
-			r.isInStock = await stockOrNot(r, startScrapes)
+			r.isInStock = await stockOrNot(r)
 			data.rows[i] = r
 			i++
 		}
@@ -56,7 +56,6 @@ exports.getOneById = async (req, res, next) => {
 	}
 
 	let scopes = ['metadata', 'image', 'provider']
-	let startScrapes = await productServices.getStartScrapes()
 
 	let product = await models.product.scope(scopes).findById(id)
 	if (!product) {
@@ -74,7 +73,9 @@ exports.getOneById = async (req, res, next) => {
 		}
 	}
 
-	product.isInStock = await stockOrNot(product, startScrapes)
+	product.isInStock = await stockOrNot(product)
+
+	product.description = striptags(product.description)
 
 	__logger.info('productController->getOneById: Found product ' + id)
 
@@ -82,31 +83,15 @@ exports.getOneById = async (req, res, next) => {
 
 }
 
-let stockOrNot = async (product, startScrapes) => {
-	let scrapeId = null
-	let startScrape = null
+let stockOrNot = async (product) => {
 	if (!product.metadata) {
 		return false
 	}
 	for (let md of product.metadata) {
-		if (md.key == '_scrape_task_id') {
-			scrapeId = md.value
+		if (md.key == 'disponibilidad') {
+			return md.value.includes('disponible')
 		}
 	}
 
-	if (!scrapeId) {
-		return false
-	}
-
-	for (let ss of startScrapes) {
-		if (scrapeId == ss.ID) {
-			startScrape = ss.meta_value || null
-		}
-	}
-
-	if (!startScrape) {
-		return false
-	}
-
-	return moment(product.updatedAt).isBefore(moment(startScrape))
+	return false
 }

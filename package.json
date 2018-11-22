@@ -35,6 +35,7 @@
 		"request-promise": "^4.2.0",
 		"sendgrid": "^5.2.3",
 		"sequelize": "git://github.com/brunomininno/sequelize.git",
+		"striptags": "^3.1.1",
 		"underscore": "^1.8.3",
 		"winston": "^2.3.1"
 	},

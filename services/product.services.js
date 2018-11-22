@@ -9,10 +9,7 @@ exports.findAll = async(options, callback) => {
 		offset: options.limit * (options.page - 1),
 		distinct: true,
 		col: 'product.id',
-		order: [
-			['updatedAt', 'DESC']
-		],
-		logging: true
+		order: []
 	}
 
 	if (options.limit && options.limit == -1) {
@@ -35,15 +32,19 @@ exports.findAll = async(options, callback) => {
 			let search = filters.search
 			let searchWithAsteriscos = search.split(' ').join('* ') + '*'
 			let sqlQuery = 'SELECT DISTINCT(p.id) AS id, ' +
+				' CASE WHEN md2.meta_key = "disponibilidad" AND md2.meta_value LIKE "%disponible%" THEN 1 ELSE 2 END AS e, ' +
 				'MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
 				'FROM wp_posts AS p ' +
 				'INNER JOIN wp_postmeta AS md ON md.post_id = p.ID ' +
+				'INNER JOIN wp_postmeta AS md2 ON md2.post_id = p.ID ' +
 				'WHERE p.post_type = "product" ' +
 				'AND( ' +
 				'	(MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE)) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				') ' +
-				'ORDER BY matchi DESC'
+				'ORDER BY ' +
+				'	e, ' +
+				'	matchi DESC'
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
 
@@ -55,7 +56,7 @@ exports.findAll = async(options, callback) => {
 				id: ids
 			}
 
-			query.order.unshift([Sequelize.literal('FIELD(product.id, ' + ids.join() + ')')])
+			query.order.push([Sequelize.literal('FIELD(product.id, ' + ids.join() + ')')])
 		}
 	}
 
