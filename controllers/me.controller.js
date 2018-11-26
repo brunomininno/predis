@@ -183,8 +183,23 @@ exports.updateMe = async(req, res, next) => {
 exports.getFavorites = async (req, res, next) => {
 	let userId = req.user.id
 	let user = await models.user.scope(['favorites']).findById(userId)
+	let profileImages = await userServices.getProfileImage()
+
+	user = user.toJSON()
 
 	let favorites = user.favorites
+
+	let i = 0
+	for (let r of user.favorites) {
+		let r = user.favorites[i].toJSON()
+		for (let pi of profileImages) {
+			if (r.provider && (r.provider.id == pi.user_id)) {
+				r.provider.profileImage = pi.meta_value
+			}
+		}
+		user.favorites[i] = r
+		i++
+	}
 	
 	return responder.respondData(res, { favorites: favorites })
 }

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 		entity.addScope('favorites', {
 			include: [
 				{
-					model: models.product.scope(['metadata', 'image']),
+					model: models.product.scope(['metadata', 'image', 'provider']),
 					required: false,
 					as: 'favorites'
 				}
