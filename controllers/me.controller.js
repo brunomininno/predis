@@ -191,7 +191,7 @@ exports.getFavorites = async (req, res, next) => {
 
 	let i = 0
 	for (let r of user.favorites) {
-		let r = user.favorites[i].toJSON()
+		let r = user.favorites[i]
 		for (let pi of profileImages) {
 			if (r.provider && (r.provider.id == pi.user_id)) {
 				r.provider.profileImage = pi.meta_value
