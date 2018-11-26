@@ -51,6 +51,13 @@ exports.findAll = async(options, callback) => {
 			let ids = result.map(v => {
 				return v.id
 			})
+
+			if (!ids.length) {
+				return callback(null, {
+					rows: [],
+					count: 0
+				})
+			}
 			
 			query.where = {
 				id: ids

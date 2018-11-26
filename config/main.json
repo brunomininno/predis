@@ -2,7 +2,7 @@
 	"jwtSalt": "Th1s155444lt3cl0ud",
 	"db": "mysql://root:root@127.0.0.1:3306/eternity",
 	"expirations": {
-		"token": 86400
+		"token": 999999999999
 	},
 	"fb": {
 		"appId": "880666325464710",
