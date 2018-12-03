@@ -31,20 +31,35 @@ exports.findAll = async(options, callback) => {
 		} else if (filters.search) {
 			let search = filters.search
 			let searchWithAsteriscos = search.split(' ').join('* ') + '*'
-			let sqlQuery = 'SELECT DISTINCT(p.id) AS id, ' +
+			let sqlQueryTitle = 'SELECT DISTINCT(p.id) AS id, ' +
 				' CASE WHEN md2.meta_key = "disponibilidad" AND md2.meta_value LIKE "%disponible%" THEN 1 ELSE 2 END AS e, ' +
-				'MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
+				'MATCH(p.post_title) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
 				'FROM wp_posts AS p ' +
 				'INNER JOIN wp_postmeta AS md ON md.post_id = p.ID ' +
 				'INNER JOIN wp_postmeta AS md2 ON md2.post_id = p.ID ' +
 				'WHERE p.post_type = "product" ' +
 				'AND( ' +
-				'	(MATCH(p.post_title, p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE)) OR ' +
+				'	(MATCH(p.post_title) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE)) OR ' +
 				'	(md.meta_key = "_sku" AND md.meta_value LIKE "%' + search + '%") ' +
 				') ' +
 				'ORDER BY ' +
 				'	e, ' +
 				'	matchi DESC'
+
+			let sqlQueryDesc = 'SELECT DISTINCT(p.id) AS id, ' +
+				' CASE WHEN md2.meta_key = "disponibilidad" AND md2.meta_value LIKE "%disponible%" THEN 1 ELSE 2 END AS e, ' +
+				'MATCH(p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
+				'FROM wp_posts AS p ' +
+				'INNER JOIN wp_postmeta AS md2 ON md2.post_id = p.ID ' +
+				'WHERE p.post_type = "product" ' +
+				'AND( ' +
+				'	(MATCH(p.post_content) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE)) ' +
+				') ' +
+				'ORDER BY ' +
+				'	e, ' +
+				'	matchi DESC'
+
+			let sqlQuery = 'SELECT id FROM (' + sqlQueryTitle + ' ) AS a1 UNION ALL SELECT id FROM( ' + sqlQueryDesc + ' ) AS a2'
 
 			let result = await models.sequelize.query(sqlQuery, { type: models.sequelize.QueryTypes.SELECT })
 
