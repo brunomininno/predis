@@ -30,7 +30,8 @@ exports.findAll = async(options, callback) => {
 			scopes = ['image']
 		} else if (filters.search) {
 			let search = filters.search
-			let searchWithAsteriscos = search.replace(/\(|\)/g, "").split(' ').join('* ') + '*'
+			let searchWithAsteriscos = search.replace(/[^\w\s]/gi, '').split(' ').join('* ') + '*'
+
 			let sqlQueryTitle = 'SELECT DISTINCT(p.id) AS id, ' +
 				' CASE WHEN md2.meta_key = "disponibilidad" AND md2.meta_value LIKE "%disponible%" THEN 1 ELSE 2 END AS e, ' +
 				'MATCH(p.post_title) AGAINST("' + searchWithAsteriscos + '" IN BOOLEAN MODE) AS matchi ' +
