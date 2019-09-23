@@ -1,8 +1,8 @@
 {
-	"name": "EternityAPI",
+	"name": "PredisAPI",
 	"version": "1.0.0",
 	"description": "",
-	"title": "Documentación API Eternity",
+	"title": "Documentación API Predis",
 	"order": [
 		"Respuestas",
 		"Modelos"

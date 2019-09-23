@@ -1,11 +1,11 @@
 {
-	"jwtSalt": "Th1s155444lt3cl0ud",
-	"db": "mysql://root:root@127.0.0.1:3306/eternity",
+	"jwtSalt": "a",
+	"db": "mysql://root:root@127.0.0.1:3306/db",
 	"expirations": {
 		"token": 999999999999
 	},
 	"fb": {
-		"appId": "880666325464710",
-		"appSecret": "eb9b445ba96c4e6c7c98dd31311e7b84"
+		"appId": "a",
+		"appSecret": "a"
 	}
 }

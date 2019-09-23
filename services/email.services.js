@@ -1,7 +1,7 @@
 'use strict'
 
 const sendgrid = require('sendgrid').mail
-const fromEmail = new sendgrid.Email(__config.sendgrid.fromEmail, 'Eternity')
+const fromEmail = new sendgrid.Email(__config.sendgrid.fromEmail, 'Predis')
 
 exports.sendConfirmationEmail = (user, confirmationLink, callback) => {
 	let mail = new sendgrid.Mail()

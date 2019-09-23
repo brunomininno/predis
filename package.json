@@ -1,13 +1,13 @@
 {
-	"name": "eternity",
+	"name": "predis",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"start": "DEBUG=eternity:* node ./bin/www",
-		"local": "NODE_ENV=local DEBUG=eternity:* nodemon ./bin/www",
-		"production": "NODE_ENV=production DEBUG=eternity:* nodemon ./bin/www",
-		"staging": "NODE_ENV=staging DEBUG=eternity:* node ./bin/www",
-		"uat": "NODE_ENV=uat DEBUG=eternity:* node ./bin/www",
+		"start": "DEBUG=predis:* node ./bin/www",
+		"local": "NODE_ENV=local DEBUG=predis:* nodemon ./bin/www",
+		"production": "NODE_ENV=production DEBUG=predis:* nodemon ./bin/www",
+		"staging": "NODE_ENV=staging DEBUG=predis:* node ./bin/www",
+		"uat": "NODE_ENV=uat DEBUG=predis:* node ./bin/www",
 		"docs": "apidoc -e node_modules -o api-docs"
 	},
 	"dependencies": {
