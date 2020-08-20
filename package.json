@@ -14,7 +14,7 @@
 		"app-module-path": "^2.1.0",
 		"async": "^2.3.0",
 		"aws-sdk": "^2.65.0",
-		"bcrypt": "^1.0.3",
+		"bcrypt": "^5.0.0",
 		"bluebird": "^3.4.7",
 		"body-parser": "~1.15.1",
 		"cookie-parser": "~1.4.3",
